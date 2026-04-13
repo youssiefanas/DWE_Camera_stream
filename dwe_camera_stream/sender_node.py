@@ -36,6 +36,16 @@ class SenderNode(Node):
         bitrate = g('bitrate')
         gop = g('gop')
 
+        # Parse bitrate string (e.g. "4M") to compute a 2× VBV buffer size.
+        # A small bufsize causes "sequence size exceeds remaining buffer".
+        br_str = bitrate.upper()
+        if br_str.endswith('M'):
+            bufsize = f"{int(br_str[:-1]) * 2}M"
+        elif br_str.endswith('K'):
+            bufsize = f"{int(br_str[:-1]) * 2}K"
+        else:
+            bufsize = str(int(bitrate) * 2)
+
         cmd = (
             f"ffmpeg -hide_banner -loglevel warning "
             f"-fflags nobuffer -flags low_delay "
@@ -45,7 +55,7 @@ class SenderNode(Node):
             f"-i {device} "
             f"-c:v libx264 -preset ultrafast -tune zerolatency "
             f"-g {gop} -bf 0 -refs 1 -b:v {bitrate} -maxrate {bitrate} "
-            f"-bufsize {bitrate} -pix_fmt yuv420p "
+            f"-bufsize {bufsize} -pix_fmt yuv420p "
             f"-flush_packets 1 -muxdelay 0 -muxpreload 0 "
             f"-f mpegts udp://{ip}:{port}?pkt_size=1316"
         )
