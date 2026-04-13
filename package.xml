@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>dwe_camera_stream</name>
+  <version>0.1.0</version>
+  <description>Low-latency H.264/mpegts UDP streaming for DWE StellarHD USB camera.</description>
+  <maintainer email="anas@todo.todo">anas</maintainer>
+  <license>MIT</license>
+
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
